@@ -33,6 +33,34 @@ namespace CSLua {
             return val;
         }
 
+        public string ExplicitString() {
+            return null;
+        }
+
+        public string String() {
+            string val = Value as string;
+
+            if (Value != null && val == null) {
+                return State.Current.Get(Value.ToString())?.String();
+            }
+
+            return val;
+        }
+
+        public LuaValue Compare(LuaValue other) {
+            if (other.Type == Lua_Type.Number) {
+                double? thisnum = Number();
+
+                if (thisnum == null) {
+                    if (Type == Lua_Type.String) {
+
+                    }
+                }
+            }
+
+            return null;
+        }
+
         public LuaValue(Lua_State st, Lua_Type type, object value) {
             State = st;
             Type = type;
@@ -226,6 +254,16 @@ namespace CSLua {
                         return new LuaValue(State, Lua_Type.Number, l * r);
                     case "==":
                         return new LuaValue(State, Lua_Type.Boolean, resl.Value.ToString() == resr.Value.ToString());
+                    case ">":
+                        return new LuaValue(State, Lua_Type.Boolean, resl.Number() > resr.Number());
+                    case "<":
+                        return new LuaValue(State, Lua_Type.Boolean, resl.Number() < resr.Number());
+                    case ">=":
+                        return new LuaValue(State, Lua_Type.Boolean, resl.Number() >= resr.Number());
+                    case "<=":
+                        return new LuaValue(State, Lua_Type.Boolean, resl.Number() <= resr.Number());
+                    case "..":
+                        return new LuaValue(State, Lua_Type.String, resl.String() + resr.String());
                     case "=":
                         if (node.Attributes.Contains("Local"))
                             State.Current.Set(node.Left.Value.Value, resr);

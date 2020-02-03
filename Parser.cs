@@ -22,7 +22,7 @@ namespace CSLua {
 
     public class Parser {
         public Lexer Lex;
-        public List<string> exprops = new List<string>() { "-", "+", "==" };
+        public List<string> exprops = new List<string>() { "-", "+", "==", ">", "<", ">=", "<=", ".." };
         public List<string> stmtops = new List<string>() { "=" };
         public List<string> termops = new List<string>() { "*", "/" };
 

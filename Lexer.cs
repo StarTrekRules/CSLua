@@ -23,7 +23,7 @@ public class Lexer {
     public int Pos = 0;
     public string Str;
     public static List<string> Keywords = new List<string>() { "then", "return", "local", "end", "function", "not", "and" };
-    public static List<string> Operators = new List<string>() { "+", "/", "-", "*", "=", "==" };
+    public static List<string> Operators = new List<string>() { "+", "/", "-", "*", "=", "==", ">", "<", ">=", "<=", ".." };
 
     private char Eat() {
         if (Pos >= Str.Length)
