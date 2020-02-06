@@ -204,8 +204,10 @@ namespace CSLua {
                 return;
             }
 
-            for (int i = func.ParamNames.Count - 1; i >= 0; i--) {
-                Current.Set(func.ParamNames[i], Pop());
+            if (args > 0) {
+              for (int i = func.ParamNames.Count - 1; i >= 0; i--) {
+                  Current.Set(func.ParamNames[i], Pop());
+              }
             }
             
             MainStack.Pop();
@@ -235,7 +237,7 @@ namespace CSLua {
         public Lua_State State;
 
         public LuaValue Visit(Node node) {
-            if (Lexer.Operators.Contains(node.Value.Value)) {
+            if (node.Value.Type == "Operator") {
                 // Resolved left and resolved right
                 LuaValue resl = Visit(node.Left);
                 LuaValue resr = Visit(node.Right);
@@ -290,7 +292,8 @@ namespace CSLua {
                 
                 foreach (string arg in args) {
                     Parser parser = new Parser(arg + " ");
-                    State.MainStack.Push(Visit(parser.Parse().Entry[0]));
+
+                    State.MainStack.Push(Visit(parser.Expression()));
                 }
                 
                 State.Call(node.Value.Value, args.Length);
@@ -353,6 +356,14 @@ namespace CSLua {
             if (node.Type == "Return") {
                 State.MainStack.Push(Visit(node.Custom[0]));
                 throw new ReturnThrow();
+            }
+
+            // Its a value.
+
+            if (node.Value.Type == "Group") {
+              Parser grpprs = new Parser(node.Value.Value + " ");
+
+              return Visit(grpprs.Expression());
             }
 
             double num;

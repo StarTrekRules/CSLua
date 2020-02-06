@@ -78,6 +78,10 @@ public class Lexer {
                     break;
             }
 
+            if (Peek() == '\0') {
+              throw new Exception("Expected ')' near <EOF>");
+            }
+
             content += Eat();
         }
 
@@ -121,8 +125,9 @@ public class Lexer {
     }
 
     private Token PeekIdent() {
-        
-        int pos = Pos;EatSpace();
+        int pos = Pos;
+        EatSpace();
+
         string id = "";
 
         while (Peek() != ' ' && Peek() != '(' && Peek() != '\n'&& Peek() != '@'&& Peek() != ']') {
@@ -216,6 +221,10 @@ public class Lexer {
             return GetString();
         }
 
+        if (Operators.Contains(PeekIdent().Value)) {
+          return new Token("Operator", GetIdentifier().Value);
+        }
+
         if (Peek() == '(') {
             return GetParams();
         }
@@ -224,6 +233,10 @@ public class Lexer {
             Eat();
 
             return new Token("TypeDecl", GetIndexer().Value);
+        }
+
+        if (Peek() == '(') {
+          return GetParams();
         }
 
         Token tok = GetIdentifier();

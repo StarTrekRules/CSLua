@@ -100,7 +100,7 @@ namespace CSLua {
             bool assigned = false;
             Node n2 = Logical();
 
-            while (stmtops.Contains(Lex.PeekToken().Value)) {
+            while (Lex.PeekToken().Type == "Operator" && stmtops.Contains(Lex.PeekToken().Value)) {
                 Token op = Lex.GetToken();
 
                 if (op.Value == "=")
@@ -196,7 +196,7 @@ namespace CSLua {
         public Node Expression(string[] termn = null) {
             Node n = Term();
 
-            while (exprops.Contains(Lex.PeekToken().Value) && ! TerminatesExpression(Lex.PeekToken(), termn)) {
+            while (Lex.PeekToken().Type == "Operator" && exprops.Contains(Lex.PeekToken().Value) && ! TerminatesExpression(Lex.PeekToken(), termn)) {
                 Token op = Lex.GetToken();
 
                 Node lf = n;
@@ -214,7 +214,7 @@ namespace CSLua {
         public Node Term() {
             Node n = Unary();
 
-            while (termops.Contains(Lex.PeekToken().Value) && ! TerminatesExpression(Lex.PeekToken(), null)) {
+            while (Lex.PeekToken().Type == "Operator" && termops.Contains(Lex.PeekToken().Value) && ! TerminatesExpression(Lex.PeekToken(), null)) {
                 Token op = Lex.GetToken();
 
                 Node lf = n;
